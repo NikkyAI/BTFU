@@ -1,0 +1,28 @@
+{
+  "id": "$modid",
+  "name": "$modname",
+  "version": "$version",
+  "side": "server",
+  "initializer": "btfubackup.BTFU",
+  "languageAdapter": "net.fabricmc.language.kotlin.KotlinLanguageAdapter",
+  "requires": {
+    "fabric-language-kotlin": {
+      "version": ">=${fabricKotlin}"
+    },
+    "fabric": {
+      "version": ">=${fabricApi}"
+    }
+  },
+  "mixins": {
+    "server": "mixins.btfu.dedicated.json"
+  },
+  "description": "Server backup done right",
+  "authors": [
+    "capitalthree",
+    "NikkyAi root@nikky.moe"
+  ],
+  "links": {
+    "sources": "https://github.com/elytra/BTFU",
+    "issues": "https://github.com/elytra/BTFU/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc"
+  }
+}

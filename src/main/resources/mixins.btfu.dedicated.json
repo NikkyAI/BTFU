@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "matterlink.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ClientConnectionMixin",
+    "CommandManagerServerMixin",
+    "MinecraftDedicatedServerMixin",
+    "PlayerManagerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

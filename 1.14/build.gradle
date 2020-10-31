@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { 
+            url = "http://maven.modmuss50.me/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "fuel-loom:fuel-loom:0.0.13-SNAPSHOT"
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.2.4"
+    id 'com.matthewprenger.cursegradle' version '1.0.10'
+}
+
+apply plugin: 'fuel-loom'
+
+version = project.mc_version + "-" + project.mod_version
+
+archivesBaseName = project.mod_name
+
+dependencies {
+    compile project(':core')
+    shadow project(':core')
+
+    minecraft(group = "com.mojang", name = "minecraft", version = "18w45a")
+
+    mappings(group = "net.fabricmc", name = "pomf", version = "${Minecraft.version}.${Fabric.Pomf.version}")
+
+    modCompile(group = "net.fabricmc", name = "fabric-loader", version = "18w44a-0.1.0.45")
+    modCompile(group = "net.fabricmc", name = "fabric-language-kotlin", version = Kotlin.version)
+    // required until modCompile also adds modCompile to runtime
+    compileOnly(group = "net.fabricmc", name = "fabric-language-kotlin", version = Kotlin.version) {
+//        exclude(module = "fabric-loader")
+    }
+}
+
+shadowJar {
+    classifier ''
+
+    dependencies {
+        include(project(":core"))
+    }
+
+    exclude 'dummyThing'
+}
+
+//minecraft {
+//    version = project.mc_version + "-" + project.forge_version
+//    runDir = "run"
+//
+//    mappings = project.mcp_mappings
+//}
+
+//processResources {
+//    // this will ensure that this task is redone when the versions change.
+//    inputs.property "version", project.mod_version
+//    inputs.property "mcversion", project.minecraft.version
+//
+//    // replace stuff in mcmod.info, nothing else
+//    from(project(":core").sourceSets.main.resources.srcDirs) {
+//        include 'mcmod.info'
+//
+//        // replace version and mcversion
+//        expand 'version': project.mod_version, 'mcversion': project.minecraft.version
+//    }
+//
+//    // copy everything else except the mcmod.info
+//    from(project(":core").sourceSets.main.resources.srcDirs) {
+//        exclude 'mcmod.info'
+//    }
+//
+//}
+
+sourceJar {
+    classifier 'sources'
+    // copy all the minecraftforge specific classes
+    from sourceSets.main.allSource
+
+    // copy everything else except the mcmod.info
+    from(project(":core").sourceSets.main.allSource) {
+        exclude 'mcmod.info'
+    }
+}
+
+//reobf {
+//    shadowJar { mappingType = 'SEARGE' }
+//}
+//
+//tasks.shadowJar.finalizedBy reobfShadowJar
+
+curseforge {
+    if (project.hasProperty('CURSEFORGE_API_TOKEN') && project.hasProperty('release')) {
+        apiKey = CURSEFORGE_API_TOKEN
+    }
+    project {
+        id = project.curse_id
+        releaseType = project.curse_release_type
+        mainArtifact(shadowJar) {
+            displayName = "$rootProject.name-$version"
+        }
+    }
+}
